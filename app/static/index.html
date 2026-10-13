@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 16px;
+        }
+        h1 { margin-bottom: 24px; }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        label { display: block; margin-bottom: 6px; font-weight: 600; }
+        input {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #2d6cdf;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover { background: #1e4fa8; }
+        button.danger { background: #c0392b; }
+        button.danger:hover { background: #922b21; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+        th { background: #f5f5f5; }
+        .hidden { display: none; }
+        .error { color: #c0392b; margin-top: 8px; font-size: 14px; }
+        .row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+        .row input { margin-bottom: 0; }
+        .row button { white-space: nowrap; }
+    </style>
+</head>
+<body>
+
+<h1>Админ-панель</h1>
+
+<!-- Блок логина -->
+<div id="login-block" class="card">
+    <h2>Вход</h2>
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="admin@example.com" autocomplete="username">
+
+    <label for="password">Пароль</label>
+    <input id="password" type="password" autocomplete="current-password">
+
+    <button id="login-btn">Войти</button>
+    <div id="login-error" class="error"></div>
+</div>
+
+<!-- Блок админки -->
+<div id="admin-block" class="card hidden">
+    <div class="row">
+        <h2 style="margin: 0;">Клиенты</h2>
+        <button id="logout-btn" class="danger" style="margin-left: auto;">Выйти</button>
+    </div>
+
+    <div class="row">
+        <input id="client-name" type="text" placeholder="Название приложения">
+        <label style="display: flex; align-items: center; gap: 6px; margin: 0;">
+            <input id="client-confidential" type="checkbox" checked style="width: auto; margin: 0;">
+            Конфиденциальный
+        </label>
+        <button id="create-client-btn">Создать клиента</button>
+    </div>
+
+    <div id="admin-error" class="error"></div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client ID</th>
+                <th>Название</th>
+                <th>Confidential</th>
+                <th>Создан</th>
+            </tr>
+        </thead>
+        <tbody id="clients-tbody">
+            <tr><td colspan="5">Загрузка...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
