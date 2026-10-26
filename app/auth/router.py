@@ -7,7 +7,7 @@ from app.auth.schemas import Credentials, MeResponse, TokenResponse
 from app.config.config import settings
 from app.audit.service import write_event, extract_request_info
 from app.core.deps import get_current_user
-from app.core.jwt import create_access_token
+from app.core.security.jwt_rsa import sign_access_token
 from app.core.passwords import (
     WeakPasswordError,
     hash_password,
@@ -69,9 +69,11 @@ def register(
     db.refresh(user)
 
     # токен
-    token = create_access_token(
+    token = sign_access_token(
         sub=user.email,
-        ttl_min=settings.jwt_access_token_expire_minutes,
+        client_id=None,
+        scopes=["openid", "email", "profile"],
+        ttl_sec=settings.access_token_ttl_sec,
     )
     return TokenResponse(access_token=token)
 
@@ -123,9 +125,11 @@ def login(
         metadata={"email": user.email},
     )
 
-    token = create_access_token(
+    token = sign_access_token(
         sub=user.email,
-        ttl_min=settings.jwt_access_token_expire_minutes,
+        client_id=None,
+        scopes=["openid", "email", "profile"],
+        ttl_sec=settings.access_token_ttl_sec,
     )
     return TokenResponse(access_token=token)
 

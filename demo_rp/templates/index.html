@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo RP</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 600px; margin: 60px auto; padding: 0 16px; text-align: center; }
+        .btn { display: inline-block; padding: 12px 24px; background: #2d6cdf; color: white; text-decoration: none; border-radius: 6px; font-size: 16px; border: none; cursor: pointer; }
+        .btn:hover { background: #1e4fa8; }
+        .btn.logout { background: #c0392b; }
+        .btn.logout:hover { background: #922b21; }
+        .card { border: 1px solid #ddd; border-radius: 8px; padding: 32px; }
+        h1 { margin-bottom: 24px; }
+        .email { font-size: 20px; color: #2d6cdf; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Demo RP</h1>
+        {% if logged_in %}
+            <p>Привет, <span class="email">{{ email }}</span>!</p>
+            <p>Вы успешно залогинились через Vault.</p>
+            <form method="post" action="/logout">
+                <button type="submit" class="btn logout">Выйти</button>
+            </form>
+        {% else %}
+            <p>Это демо-приложение, которое использует Vault как OIDC-провайдер.</p>
+            <a href="/login" class="btn">Войти через Vault</a>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -3,10 +3,15 @@ directive @isAdmin on FIELD_DEFINITION
 
 type User {
     id: ID!
-    email: String!
+    clientId: String!
+    name: String!
+    isConfidential: Boolean!
+    redirectUris: [String!]!
+    scopes: [String!]!
+    grantTypes: [String!]!
     isActive: Boolean!
-    isAdmin: Boolean!
     createdAt: String!
+    updatedAt: String!
 }
 
 type Client {
@@ -15,7 +20,11 @@ type Client {
     name: String!
     isConfidential: Boolean!
     redirectUris: [String!]!
+    scopes: [String!]!
+    grantTypes: [String!]!
+    isActive: Boolean!
     createdAt: String!
+    updatedAt: String!
 }
 
 type AuditEvent {
@@ -38,10 +47,52 @@ type Query {
     users(search: String, limit: Int = 50, offset: Int = 0): [User!]! @isAdmin
     clients: [Client!]! @isAdmin
     auditEvents(eventType: String, limit: Int = 100, offset: Int = 0): [AuditEvent!]! @isAdmin
+
+    sessions(userId: ID): [Session!]! @isAdmin
+    refreshTokens(userId: ID): [RefreshTokenInfo!]! @isAdmin
+}
+
+type ClientSecretPayload {
+    clientId: String!
+    clientSecret: String
 }
 
 type Mutation {
     registerUser(email: String!, password: String!): AuthPayload!
-    createClient(name: String!, isConfidential: Boolean = true): Client! @isAdmin
+    createClient(
+        name: String!
+        isConfidential: Boolean = true
+        scopes: [String!] = ["openid"]
+        grantTypes: [String!] = ["authorization_code", "refresh_token"]
+        redirectUris: [String!] = []
+    ): ClientSecretPayload! @isAdmin
     disableUser(userId: Int!): User! @isAdmin
+
+    revokeUserSessions(userId: ID!): Int! @isAdmin
+    rotateClientSecret(clientId: ID!): ClientSecretPayload! @isAdmin
+    enableClient(clientId: ID!): Client! @isAdmin
+    disableClient(clientId: ID!): Client! @isAdmin
+}
+
+type Session {
+    id: ID!
+    clientId: String!
+    familyId: String!
+    ip: String
+    userAgent: String
+    createdAt: String!
+    lastSeenAt: String!
+    revokedAt: String
+}
+
+type RefreshTokenInfo {
+    id: ID!
+    jti: String!
+    familyId: String!
+    clientId: String!
+    scope: String!
+    expiresAt: String!
+    usedAt: String
+    revokedAt: String
+    createdAt: String!
 }

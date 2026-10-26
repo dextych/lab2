@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Тест Userinfo</h2>
+    <p>Вставь access_token (без слова Bearer):</p>
+    <textarea id="token" rows="5" cols="80"></textarea><br><br>
+    <button onclick="test()">Отправить запрос</button>
+    <pre id="result" style="background: #eee; padding: 10px; margin-top: 20px;"></pre>
+
+    <script>
+        async function test() {
+            const token = document.getElementById('token').value.trim();
+            const resultEl = document.getElementById('result');
+            resultEl.textContent = "Загрузка...";
+            
+            try {
+                const res = await fetch('http://127.0.0.1:8080/oauth/userinfo', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                const data = await res.json();
+                resultEl.textContent = "Статус: " + res.status + "\n\n" + JSON.stringify(data, null, 2);
+            } catch (e) {
+                resultEl.textContent = "Ошибка: " + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

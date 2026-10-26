@@ -10,12 +10,6 @@ from app.config.config import settings
 
 
 def create_access_token(sub: str, ttl_min: int) -> str:
-    """
-    Формирует access-токен.
-
-    sub     — идентификатор пользователя (email или id).
-    ttl_min — время жизни в минутах.
-    """
     now = datetime.now(timezone.utc)
     payload: dict[str, Any] = {
         "sub": sub,

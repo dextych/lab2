@@ -15,13 +15,7 @@ def write_event(
     user_agent: str | None = None,
     metadata: dict[str, Any] | None = None,
 ) -> AuditEvent:
-    """
-    Записывает событие аудита и коммитит транзакцию.
 
-    Правила:
-      - НИКОГДА не передавать в metadata пароли, хэши, токены.
-      - event_type — в формате <объект>.<действие>, нижний регистр через точку.
-    """
     event = AuditEvent(
         event_type=event_type,
         actor_id=actor_id,
