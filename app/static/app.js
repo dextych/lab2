@@ -178,7 +178,7 @@ async function handleCreateClient() {
         `, { name, isConfidential });
 
         if (data.createClient.clientSecret) {
-            alert(`Клиент создан!\n\nClient ID: ${data.createClient.clientId}\nClient Secret: ${data.createClient.clientSecret}\n\nСКОПИРУЙТЕ СЕКРЕТ СЕЙЧАС!`);
+            prompt(`Клиент создан!\n\nClient ID: ${data.createClient.clientId}\nClient Secret: ${data.createClient.clientSecret}\n\nСКОПИРУЙТЕ СЕКРЕТ СЕЙЧАС!`);
         } else {
             alert(`Клиент создан!\nClient ID: ${data.createClient.clientId}`);
         }
@@ -204,7 +204,7 @@ async function rotateSecret(clientId) {
             }
         `, { clientId });
 
-        alert(`Новый секрет для ${data.rotateClientSecret.clientId}:\n\n${data.rotateClientSecret.clientSecret}\n\nСКОПИРУЙТЕ ЕГО СЕЙЧАС!`);
+        prompt(`Новый секрет для ${data.rotateClientSecret.clientId}:\n\n${data.rotateClientSecret.clientSecret}\n\nСКОПИРУЙТЕ ЕГО СЕЙЧАС!`);
     } catch (err) {
         setError(adminError, err.message);
     }
