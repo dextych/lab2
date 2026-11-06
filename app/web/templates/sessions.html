@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Устройства{% endblock %}
+{% block content %}
+    <h2>Активные устройства</h2>
+    <a href="/web/account">Назад в профиль</a>
+    
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr style="background: #eee;">
+            <th style="padding: 8px; border: 1px solid #ccc;">IP</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">Устройство</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">Последний визит</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">Действия</th>
+        </tr>
+        {% for s in sessions %}
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ccc;">{{ s.ip or 'Неизвестно' }}</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">
+                {{ s.user_agent[:50] if s.user_agent else 'Неизвестно' }}...
+            </td>
+            <td style="padding: 8px; border: 1px solid #ccc;">{{ s.last_seen_at.strftime('%d.%m.%Y %H:%M') }}</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">
+                {% if s.session_id == current_session_id %}
+                    <b>Эта сессия</b>
+                {% else %}
+                    <form action="/web/account/sessions/{{ s.session_id }}/revoke" method="POST" style="margin: 0;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <button type="submit" style="color: red;">Завершить</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

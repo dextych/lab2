@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Админ-дашборд{% endblock %}
+{% block content %}
+    <h2>Дашборд</h2>
+    <ul>
+        <li>Пользователей: <b>{{ users_count }}</b></li>
+        <li>OAuth-клиентов: <b>{{ clients_count }}</b></li>
+        <li>Событий аудита: <b>{{ audit_count }}</b></li>
+    </ul>
+    <hr>
+    <div style="display: flex; gap: 10px;">
+        <a href="/web/admin/users"><button>Пользователи</button></a>
+        <a href="/web/admin/clients"><button>Клиенты</button></a>
+        <a href="/web/admin/audit"><button>Аудит</button></a>
+    </div>
+{% endblock %}

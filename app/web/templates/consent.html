@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Согласие на доступ{% endblock %}
+{% block content %}
+    <h2>Разрешить доступ?</h2>
+    <p>Приложение <b>{{ client_name }}</b> запрашивает доступ к вашему аккаунту <b>{{ current_user.email }}</b>.</p>
+    
+    <p>Оно запрашивает следующие права:</p>
+    <ul>
+        {% for scope in scopes %}
+            <li>{% if scope == 'openid' %}Ваш ID пользователя{% elif scope == 'email' %}Ваш Email{% elif scope == 'profile' %}Ваш Профиль{% else %}{{ scope }}{% endif %}</li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST" action="/web/consent" style="display: flex; gap: 10px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="request_id" value="{{ request_id }}">
+        <button type="submit" name="decision" value="allow" style="background: #2d6cdf; color: white;">Разрешить</button>
+        <button type="submit" name="decision" value="deny" style="background: #c0392b; color: white;">Отклонить</button>
+    </form>
+{% endblock %}

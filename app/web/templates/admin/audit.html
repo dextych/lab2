@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Аудит{% endblock %}
+{% block content %}
+    <h2>Последние 100 событий</h2>
+    <a href="/web/admin">Назад на дашборд</a>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px;">
+        <tr style="background: #eee;">
+            <th>Дата</th><th>Тип события</th><th>User ID</th><th>Client ID</th><th>IP</th>
+        </tr>
+        {% for e in events %}
+        <tr>
+            <td>{{ e.created_at.strftime('%d.%m %H:%M') }}</td>
+            <td><b>{{ e.event_type }}</b></td>
+            <td>{{ e.actor_id or '-' }}</td>
+            <td>{{ e.client_id or '-' }}</td>
+            <td>{{ e.ip or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

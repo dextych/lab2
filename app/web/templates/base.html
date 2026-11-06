@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Vault{% endblock %}</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; }
+        .nav { background: #eee; padding: 10px; margin-bottom: 20px; display: flex; gap: 10px;}
+        .flash { padding: 10px; margin-bottom: 10px; background: #d4edda; color: #155724; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/web/account">Аккаунт</a>
+        {% if current_user and current_user.is_admin %}
+            <a href="/web/admin">Админка</a>
+        {% endif %}
+        <div style="flex-grow: 1;"></div>
+        {% if current_user %}
+            <span>{{ current_user.email }}</span>
+            <form action="/web/logout" method="POST" style="margin:0;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit">Выйти</button>
+            </form>
+        {% else %}
+            <a href="/web/login">Войти</a>
+        {% endif %}
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% for msg in messages %}
+            <div class="flash">{{ msg }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</body>
+</html>

@@ -35,5 +35,10 @@ class Settings(BaseSettings):
     auth_code_ttl_sec: int = 60
     pkce_required_for_public: bool = True
 
+        # Web Sessions
+    session_secret: str = "super-secret-web-session-key-change-me"
+    session_cookie_name: str = "vault_session"
+    session_ttl_min: int = 30
+
 
 settings = Settings()

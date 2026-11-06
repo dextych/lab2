@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Клиенты{% endblock %}
+{% block content %}
+    <h2>OAuth-клиенты</h2>
+    <a href="/web/admin">Назад на дашборд</a>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr style="background: #eee;">
+            <th>Client ID</th><th>Название</th><th>Confidential</th><th>Grant Types</th>
+        </tr>
+        {% for c in clients %}
+        <tr>
+            <td>{{ c.client_id }}</td>
+            <td>{{ c.name }}</td>
+            <td>{{ "Да" if c.is_confidential else "Нет" }}</td>
+            <td>{{ c.grant_types | join(', ') if c.grant_types else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

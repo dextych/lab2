@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+    <h2>Вход в систему</h2>
+    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
+    
+    <form method="POST" action="/web/login">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="next" value="{{ next_url or '' }}"> 
+        <p><label>Email:</label><br>
+        <input type="email" name="email" required style="width: 100%;"></p>
+        
+        <p><label>Пароль:</label><br>
+        <input type="password" name="password" required style="width: 100%;"></p>
+        
+        <button type="submit">Войти</button>
+    </form>
+    <p><a href="/web/register">Нет аккаунта? Зарегистрироваться</a></p>
+{% endblock %}
