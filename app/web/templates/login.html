@@ -2,11 +2,11 @@
 {% block title %}Вход{% endblock %}
 {% block content %}
     <h2>Вход в систему</h2>
-    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
     
     <form method="POST" action="/web/login">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <input type="hidden" name="next" value="{{ next_url or '' }}"> 
+        <input type="hidden" name="next" value="{{ next_url or '' }}">
+        
         <p><label>Email:</label><br>
         <input type="email" name="email" required style="width: 100%;"></p>
         

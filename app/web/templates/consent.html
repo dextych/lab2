@@ -1,20 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Согласие на доступ{% endblock %}
 {% block content %}
-    <h2>Разрешить доступ?</h2>
-    <p>Приложение <b>{{ client_name }}</b> запрашивает доступ к вашему аккаунту <b>{{ current_user.email }}</b>.</p>
-    
-    <p>Оно запрашивает следующие права:</p>
-    <ul>
-        {% for scope in scopes %}
-            <li>{% if scope == 'openid' %}Ваш ID пользователя{% elif scope == 'email' %}Ваш Email{% elif scope == 'profile' %}Ваш Профиль{% else %}{{ scope }}{% endif %}</li>
-        {% endfor %}
-    </ul>
+    <article style="max-width: 600px; margin: 0 auto; text-align: center;">
+        <header>
+            <h2>Разрешить доступ?</h2>
+        </header>
+        
+        <p>Приложение <strong>{{ client_name }}</strong> запрашивает доступ к вашему аккаунту <strong>{{ current_user.email }}</strong>.</p>
+        
+        <p>Оно хочет получить следующие права:</p>
+        <ul style="text-align: left; display: inline-block;">
+            {% for scope in scopes %}
+                <li>
+                    {% if scope == 'openid' %}🆔 <b>Ваш ID пользователя</b> (чтобы знать, кто вы)
+                    {% elif scope == 'email' %}📧 <b>Ваш Email</b> (для связи)
+                    {% elif scope == 'profile' %}👤 <b>Ваш Профиль</b> (имя и аватар)
+                    {% else %}⚙️ {{ scope }}{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
 
-    <form method="POST" action="/web/consent" style="display: flex; gap: 10px;">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <input type="hidden" name="request_id" value="{{ request_id }}">
-        <button type="submit" name="decision" value="allow" style="background: #2d6cdf; color: white;">Разрешить</button>
-        <button type="submit" name="decision" value="deny" style="background: #c0392b; color: white;">Отклонить</button>
-    </form>
+        <footer>
+            <form method="POST" action="/web/consent" style="display: flex; justify-content: center; gap: 20px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="request_id" value="{{ request_id }}">
+                
+                <button type="submit" name="decision" value="deny" class="secondary outline">Отклонить</button>
+                <button type="submit" name="decision" value="allow">Разрешить</button>
+            </form>
+        </footer>
+    </article>
 {% endblock %}

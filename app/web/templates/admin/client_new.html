@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Создать клиента{% endblock %}
+{% block content %}
+    <h2>Создание OAuth-клиента</h2>
+    <a href="/web/admin/clients">Назад к списку</a>
+
+    <form method="POST" action="/web/admin/clients/new" style="margin-top: 20px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        
+        <label>Название приложения</label>
+        <input type="text" name="name" required placeholder="Мое приложение">
+
+        <label>
+            <input type="checkbox" name="is_confidential" value="true">
+            Конфиденциальный клиент (будет сгенерирован секрет)
+        </label>
+
+        <label>Разрешенные Scopes (через запятую)</label>
+        <input type="text" name="scopes" value="openid, email, profile">
+
+        <label>Grant Types (через запятую)</label>
+        <input type="text" name="grant_types" value="authorization_code, refresh_token">
+
+        <label>Redirect URIs (через запятую)</label>
+        <input type="text" name="redirect_uris" placeholder="http://localhost:8001/callback">
+
+        <button type="submit">Создать клиента</button>
+    </form>
+{% endblock %}

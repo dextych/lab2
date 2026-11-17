@@ -1,39 +1,98 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="{{ request.cookies.get('theme', 'light') }}">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Vault{% endblock %}</title>
+    
+    <!-- Подключаем Pico.css (минималистичный фреймворк) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; }
-        .nav { background: #eee; padding: 10px; margin-bottom: 20px; display: flex; gap: 10px;}
-        .flash { padding: 10px; margin-bottom: 10px; background: #d4edda; color: #155724; }
-        .error { color: red; }
+        /* Наши небольшие дополнения */
+        body { padding-top: 20px; }
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .nav-bar .logo { font-weight: bold; font-size: 1.2rem; text-decoration: none; }
+        .nav-bar .spacer { flex-grow: 1; }
+        .flash-msg {
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        .error-msg {
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        .success-msg {
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background-color: #f8f9fa; }
     </style>
 </head>
+
+<script>
+    function toggleTheme() {
+        let current = document.documentElement.getAttribute('data-theme');
+        let next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        document.cookie = `theme=${next}; path=/; max-age=31536000`;
+    }
+</script>
+
 <body>
-    <div class="nav">
-        <a href="/web/account">Аккаунт</a>
-        {% if current_user and current_user.is_admin %}
-            <a href="/web/admin">Админка</a>
-        {% endif %}
-        <div style="flex-grow: 1;"></div>
-        {% if current_user %}
-            <span>{{ current_user.email }}</span>
-            <form action="/web/logout" method="POST" style="margin:0;">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                <button type="submit">Выйти</button>
-            </form>
-        {% else %}
-            <a href="/web/login">Войти</a>
-        {% endif %}
-    </div>
+    <div class="container">
+        <!-- Шапка сайта -->
+        <nav class="nav-bar">
+            <a href="/" class="logo">🔒 Vault SSO</a>
+            <a href="/web/account">Аккаунт</a>
+            {% if current_user and current_user.is_admin %}
+                <a href="/web/admin">Админка</a>
+            {% endif %}
+            <div class="spacer"></div>
+            
+            {% if current_user %}
+                <span><b>{{ current_user.email }}</b></span>
+                <form action="/web/logout" method="POST" style="margin: 0;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="secondary outline" style="padding: 5px 15px;">Выйти</button>
+                </form>
+            {% else %}
+                <a href="/web/login" role="button">Войти</a>
+            {% endif %}
+            <button onclick="toggleTheme()" class="outline" style="padding: 5px 10px;">🌓</button>
+        </nav>
 
-    {% with messages = get_flashed_messages() %}
-        {% for msg in messages %}
-            <div class="flash">{{ msg }}</div>
+        <!-- Flash-сообщения -->
+        {% for msg in get_flashed_messages(request) %}
+            <div class="{{ 'error-msg' if msg.category == 'error' else 'success-msg' }}">
+                {{ msg.message }}
+            </div>
         {% endfor %}
-    {% endwith %}
 
-    {% block content %}{% endblock %}
+        <!-- Основной контент страницы -->
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </body>
 </html>

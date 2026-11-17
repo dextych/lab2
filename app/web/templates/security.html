@@ -4,9 +4,6 @@
     <h2>Смена пароля</h2>
     <a href="/web/account">Назад в профиль</a>
 
-    {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
-    {% if success %}<p style="color:green;">{{ success }}</p>{% endif %}
-
     <form method="POST" action="/web/account/security" style="margin-top: 20px;">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         

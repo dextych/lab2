@@ -3,6 +3,13 @@
 {% block content %}
     <h2>Пользователи</h2>
     <a href="/web/admin">Назад на дашборд</a>
+
+    <!-- Форма поиска -->
+    <form method="GET" action="/web/admin/users" style="margin-top: 20px; display: flex; gap: 10px;">
+        <input type="search" name="q" value="{{ search_query }}" placeholder="Поиск по email...">
+        <button type="submit">Найти</button>
+    </form>
+
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <tr style="background: #eee;">
             <th>ID</th><th>Email</th><th>Активен</th><th>Админ</th><th>Дата создания</th>
@@ -10,11 +17,14 @@
         {% for u in users %}
         <tr>
             <td>{{ u.id }}</td>
-            <td>{{ u.email }}</td>
+            <td>{{ u.email }}</td>  
             <td>{{ "Да" if u.is_active else "Нет" }}</td>
             <td>{{ "Да" if u.is_admin else "Нет" }}</td>
             <td>{{ u.created_at.strftime('%d.%m.%Y') }}</td>
         </tr>
         {% endfor %}
     </table>
+    {% if not users %}
+        <p>Пользователи не найдены.</p>
+    {% endif %}
 {% endblock %}

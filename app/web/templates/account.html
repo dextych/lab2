@@ -2,13 +2,16 @@
 {% block title %}Личный кабинет{% endblock %}
 {% block content %}
     <h2>Личный кабинет</h2>
-    <p><b>Email:</b> {{ current_user.email }}</p>
-    <p><b>Дата регистрации:</b> {{ current_user.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
-    <p><b>Статус:</b> {% if current_user.is_admin %}Администратор{% else %}Пользователь{% endif %}</p>
     
-    <hr>
-    <div style="display: flex; gap: 10px;">
-        <a href="/web/account/sessions"><button>Управление устройствами</button></a>
-        <a href="/web/account/security"><button>Сменить пароль</button></a>
+    <article>
+        <header><b>Профиль</b></header>
+        <p><b>Email:</b> {{ current_user.email }}</p>
+        <p><b>Дата регистрации:</b> {{ current_user.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+        <p><b>Статус:</b> {% if current_user.is_admin %}<mark>Администратор</mark>{% else %}Пользователь{% endif %}</p>
+    </article>
+
+    <div class="grid">
+        <a href="/web/account/sessions" role="button" class="outline">📱 Управление устройствами</a>
+        <a href="/web/account/security" role="button" class="outline">🔑 Сменить пароль</a>
     </div>
 {% endblock %}

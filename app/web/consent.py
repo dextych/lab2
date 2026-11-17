@@ -34,7 +34,7 @@ async def consent_page(request: Request, request_id: str, user: User | None = De
         "csrf_token": get_csrf_token(request),
         "current_user": user,
         "request_id": request_id,
-        "client_name": "Demo-RP", # В идеале взять из БД
+        "client_name": "Demo-RP", 
         "scopes": data["scope"].split(),
     })
 

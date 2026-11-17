@@ -16,8 +16,28 @@ from app.web.deps import get_current_web_user
 from app.web.router import router as web_router
 from app.web.consent import router as consent_router
 from app.web.admin_router import router as admin_web_router;
+from fastapi import Request, HTTPException
+from app.web.templates import templates
+from fastapi.responses import RedirectResponse
+from fastapi import status
 
 app = FastAPI(title=settings.app_name, debug=settings.debug)
+
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request: Request, exc: HTTPException):
+    # Если это веб-страница (начинается с /web/), рендерим HTML
+    if request.url.path.startswith("/web/"):
+        if exc.status_code == 404:
+            return templates.TemplateResponse("error.html", {"request": request, "code": 404, "message": "Страница не найдена"}, status_code=404)
+        if exc.status_code == 403:
+            return templates.TemplateResponse("error.html", {"request": request, "code": 403, "message": "Доступ запрещен"}, status_code=403)
+        
+        # Для остальных ошибок тоже можно сделать страницу
+        return templates.TemplateResponse("error.html", {"request": request, "code": exc.status_code, "message": exc.detail}, status_code=exc.status_code)
+    
+    # Для API (Swagger, GraphQL) оставляем JSON
+    from fastapi.responses import JSONResponse
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
 @app.exception_handler(OAuthError)
 async def oauth_error_handler(request, exc: OAuthError):
@@ -47,3 +67,10 @@ app.include_router(admin_web_router)
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
+
+@app.exception_handler(404)
+async def not_found_handler(request: Request, exc):
+    if request.url.path.startswith("/web/"):
+        return templates.TemplateResponse("error.html", {"request": request, "code": 404, "message": "Страница не найдена"}, status_code=404)
+    from fastapi.responses import JSONResponse
+    return JSONResponse(status_code=404, content={"detail": "Not Found"})
